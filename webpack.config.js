@@ -10,7 +10,6 @@ const webpackConfig = {
   output: {
     path: resolve('dist'), // path为打包后的输出文件夹位置，此处为 ./dist文件夹
     filename: '[contenthash].bundle.js',
-    assetModuleFilename: 'images/[hash][ext][query]',
     clean: true, // 每次打包清理上一下文件
   },
   module: {
@@ -47,13 +46,24 @@ const webpackConfig = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         exclude: /node_modules/,
-        type: 'asset/resource',
+        type: 'asset',
+        generator: {
+          filename: 'image/[name].[hash:6][ext]',
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 30 * 1024,
+          },
+        },
       },
       // font
       {
-        test: /\.(woff|eot|ttf|svg|gif)$/,
+        test: /\.(woff2?|eot|ttf)$/,
         exclude: /node_modules/,
-        type: 'asset/inline',
+        type: 'asset/resource',
+        generator: {
+          filename: 'font/[name].[hash:6][ext]',
+        },
       },
     ],
   },
